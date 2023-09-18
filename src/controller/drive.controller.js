@@ -5,7 +5,8 @@ import fs from "fs";
 
 export const uploadFile = (req, res) => {
     upload(req, res, async (err) => {
-        const { studentName, studentCode } = req.body;
+        const studentName = req.data.StudentName;
+        const studentCode = req.data.StudentCode;
         if (!studentName || !studentCode) {
             return res.status(400).json({
                 message: "Please enter a student name and code.",

@@ -5,7 +5,7 @@ import upload from "../middleware/upload.middleware.js";
 
 const router = express.Router();
 const driveRouter = (app) => {
-    router.patch('/', authMiddleware, uploadFile);
+    router.post('/', authMiddleware, uploadFile);
 
     app.use('/api/drive', router);
 }
