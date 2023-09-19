@@ -5,11 +5,10 @@ import fs from "fs";
 
 export const uploadFile = (req, res) => {
     upload(req, res, async (err) => {
-        const studentName = req.data.StudentName;
-        const studentCode = req.data.StudentCode;
-        if (!studentName || !studentCode) {
+        const { studentCode } = req.body;
+        if (!studentCode) {
             return res.status(400).json({
-                message: "Please enter a student name and code.",
+                message: "Please enter a student code.",
             })
         }
         if (req.fileValidationError) {
@@ -32,7 +31,7 @@ export const uploadFile = (req, res) => {
         }
         const { file } = req;
         const dotIndex = file.originalname.lastIndexOf('.');
-        file.originalname = studentCode + '-' + studentName + file.originalname.substring(dotIndex);
+        file.originalname = studentCode + file.originalname.substring(dotIndex);
         const newFilePath = file.destination + '/' + file.originalname;
         try {
 
