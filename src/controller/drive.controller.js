@@ -2,6 +2,7 @@ import { MulterError } from "multer";
 import upload from "../middleware/upload.middleware.js";
 import { uploadDriveFile } from "../helper/google_apis.helper.js";
 import fs from "fs";
+import { checkFileNameExists } from "../helper/storage.helper.js";
 
 export const uploadFile = (req, res) => {
     upload(req, res, async (err) => {
@@ -32,14 +33,16 @@ export const uploadFile = (req, res) => {
         const { file } = req;
         const dotIndex = file.originalname.lastIndexOf('.');
         file.originalname = studentCode + file.originalname.substring(dotIndex);
+        checkFileNameExists(studentCode);
         const newFilePath = file.destination + '/' + file.originalname;
         try {
-
+            //rename file
+            fs.renameSync(file.path, newFilePath);
+            file.path = newFilePath;
             //upload file to Drive
             uploadDriveFile(file).then((value) => {
                 console.log("Save file with id: " + value.data.id);
-                //rename file
-                fs.renameSync(file.path, newFilePath);
+
             });
             // save image successfully
             return res.status(200).json({ message: 'Save file successfully' });
